@@ -1,6 +1,13 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+
+require 'vendor/PHPMailer/src/Exception.php';
+require 'vendor/PHPMailer/src/PHPMailer.php';
+require 'vendor/PHPMailer/src/SMTP.php';
 class Peminjaman_kajur extends CI_Controller
 {
 
@@ -25,10 +32,40 @@ class Peminjaman_kajur extends CI_Controller
 
 	public function setujui($id_peminjaman)
 	{
-
+		$this->load->model('pegawai_model', 'user');
+		$mail = new PHPMailer(true);
+		$plp = $this->user->get_plp();
+		$this->load->model('peminjaman_model');
+		$userPinjam = $this->peminjaman_model->get_SatuPeminjaman($id_peminjaman);
 		$this->load->model('peminjaman_model');
 		$proses_update = $this->peminjaman_model->persetujuan_kajur($id_peminjaman);
 		if ($proses_update) {
+			try {
+				//Server settings
+				$mail->SMTPDebug = SMTP::DEBUG_SERVER;                      //Enable verbose debug output
+				$mail->isSMTP();                                            //Send using SMTP
+				$mail->Host       = 'ssl://smtp.gmail.com:465';                     //Set the SMTP server to send through
+				$mail->SMTPAuth   = true;                                   //Enable SMTP authentication
+				$mail->Username   = 'bengkelmesin.polmanbabel@gmail.com';                     //SMTP username
+				$mail->Password   = 'peminjaman2021';                               //SMTP password
+				$mail->SMTPSecure = 'SSL';            //Enable implicit TLS encryption
+				$mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
+
+				//Recipients 	
+				$mail->setFrom('bengkelmesin.polmanbabel@gmail.com', 'Bengkel Mesin');
+				$mail->addAddress($plp['email']);     //Add a recipient
+				$mail->addReplyTo('bengkelmesin.polmanbabel@gmail.com', 'Bengkel Mesin');
+				// $mail->addCC('cc@example.com');
+				// $mail->addBCC('bcc@example.com');
+
+				//Content
+				$mail->isHTML(true);                                  //Set email format to HTML
+				$mail->Subject = $userPinjam['nama_pegawai'] . "Mengajukan peminjaman mesin baru";
+				$mail->Body    = $userPinjam['nama_pegawai'] . '<br>Mengajukan peminjaman mesin baru,Silahkan lakukan persetujuan &nbsp;<a href="">Buka</a>';
+				$mail->send();
+			} catch (Exception $e) {
+				// echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+			}
 			$this->session->set_flashdata('pesan', 'sukses update');
 		} else {
 			$this->session->set_flashdata('pesan', 'gagal update');

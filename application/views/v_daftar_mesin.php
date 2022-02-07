@@ -237,8 +237,6 @@
             <input type="hidden" name="id_mesin" id="id_mesin"><br>
             <br> Tanggal Pinjam
             <input type="date" name="tanggal_pinjam" class="form-control" required>
-            <br> Tanggal Kembali
-            <input type="date" name="tanggal_kembali" class="form-control" required>
             <br> Alasan Peminjaman
             <input type="text" name="alasan" class="form-control" max="5" min="0" required>
             <br> Kelas

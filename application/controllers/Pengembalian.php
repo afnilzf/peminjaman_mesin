@@ -147,4 +147,18 @@ class Pengembalian extends CI_Controller
 		$this->Peminjaman_model->selesai($id_peminjaman);
 		redirect('pengembalian', 'refresh');
 	}
+
+	public function rekap()
+	{
+		$data['konten'] = "v_rekap";
+		$this->load->model('peminjaman_model');
+		// $id_mesin = $this->input->post('id_mesin');
+		$ambil = $this->input->post();
+		$tahun = date('Y');
+		$data['rekap'] = $this->peminjaman_model->transaksiRekapBulan($ambil['bulan'], $tahun);
+		// var_dump($ambil['bulan']);
+		// die();
+
+		$this->load->view('index', $data);
+	}
 }

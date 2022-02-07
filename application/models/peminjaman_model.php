@@ -13,6 +13,15 @@ class peminjaman_model extends CI_Model
       ->where($where)
       ->order_by('id_peminjaman', 'DESC')->get('Peminjaman')->result();
   }
+  public function get_SatuPeminjaman($id)
+  {
+    $where = "id_peminjaman = $id";
+    return $this->db
+      ->join('daftar_mesin', 'daftar_mesin.id_mesin=Peminjaman.id_mesin')
+      ->join('Pegawai', 'Pegawai.id_pegawai=Peminjaman.id_pegawai')
+      ->where($where)
+      ->get('Peminjaman')->row_array();
+  }
   public function mesin()
   {
     return $this->db
@@ -26,6 +35,17 @@ class peminjaman_model extends CI_Model
       ->join('daftar_mesin', 'daftar_mesin.id_mesin=Peminjaman.id_mesin')
       ->join('Pegawai', 'Pegawai.id_pegawai=Peminjaman.id_pegawai')
       ->where($where)
+      ->order_by('id_peminjaman', 'DESC')->get('Peminjaman')->result();
+  }
+  public function transaksiRekapBulan($bulan, $tahun)
+  {
+    $where = "status_peminjaman = 8";
+    $where1 = "MONTH(tanggal_pinjam) = $bulan AND YEAR(tanggal_pinjam) = $tahun";
+    return $this->db
+      ->join('daftar_mesin', 'daftar_mesin.id_mesin=Peminjaman.id_mesin')
+      ->join('Pegawai', 'Pegawai.id_pegawai=Peminjaman.id_pegawai')
+      ->where($where)
+      ->where($where1)
       ->order_by('id_peminjaman', 'DESC')->get('Peminjaman')->result();
   }
   public function get_peminjamanorder()
@@ -106,11 +126,15 @@ class peminjaman_model extends CI_Model
   {
     $id_pegawai = $this->session->userdata('id_pegawai');
     $id_mesin = $this->input->post('id_mesin');
-
+    $tanggalMulai = $this->input->post('tanggal_pinjam');
+    $date = new DateTime($tanggalMulai);
+    $tanggalSelesai = $date->modify("+5 days")->format('Y-m-d');
+    // var_dump($tanggalSelesai);
+    // die();
     $data_peminjaman = array(
       'id_mesin' => $this->input->post('id_mesin'),
       'tanggal_pinjam' => $this->input->post('tanggal_pinjam'),
-      'tanggal_kembali' => $this->input->post('tanggal_kembali'),
+      'tanggal_kembali' => $tanggalSelesai,
       'alasan' => $this->input->post('alasan'),
       'kelas' => $this->input->post('kelas'),
       'status_peminjaman' => 'Menunggu Persetujuan Kalab',
@@ -172,8 +196,10 @@ class peminjaman_model extends CI_Model
   }
   public function penolakan($id_peminjaman)
   {
+
     $dt_up_peminjaman = array(
       'status_peminjaman' => 'Ditolak',
+      'tolak_alasan' => $this->input->post('alasan'),
     );
     return $this->db->where('id_peminjaman', $id_peminjaman)->update('Peminjaman', $dt_up_peminjaman);
   }

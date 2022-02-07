@@ -75,7 +75,6 @@
 
 							<?php if ($dt_pmnjmn->status_peminjaman == 'Menunggu Persetujuan PLP') : ?>
 								<a href="<?= base_url('index.php/Peminjaman/setujui/') . $dt_pmnjmn->id_peminjaman ?>" class="btn btn-success">Setujui</a>
-								<a href="<?= base_url('index.php/Peminjaman/tolak/') . $dt_pmnjmn->id_peminjaman ?>" class="btn btn-warning">Tolak</a>
 							<?php endif; ?>
 
 							<a class="btn btn-danger" data-toggle="modal" onclick="if (confirm('Apakah anda yakin ?')) window.location.href='<?=
@@ -156,10 +155,10 @@
 						<td>
 							<?php if ($this->session->userdata('nama_level') == 'Kalab') : ?>
 								<a href="<?= base_url('index.php/Peminjaman_kalab/setujui/') . $dt_pmnjmn->id_peminjaman ?>" class="btn btn-success">Setujui</a><br>
-								<a href="<?= base_url('index.php/Peminjaman_kalab/tolak/') . $dt_pmnjmn->id_peminjaman ?>" class="btn btn-danger">Tolak</a>
+								<a href="#update_peminjaman" class="btn btn-danger" data-toggle="modal" onclick="tm_detail(<?= $dt_pmnjmn->id_peminjaman ?>)">Kembalikan</a>
+
 							<?php elseif ($this->session->userdata('nama_level') == 'Kajur') : ?>
 								<a href="<?= base_url('index.php/Peminjaman_kajur/setujui/') . $dt_pmnjmn->id_peminjaman ?>" class="btn btn-success">Setujui</a>&nbsp;
-								<a href="<?= base_url('index.php/Peminjaman_kajur/tolak/') . $dt_pmnjmn->id_peminjaman ?>" class="btn btn-danger">Tolak</a>
 							<?php endif ?>
 						</td>
 					</tr>
@@ -190,6 +189,7 @@
 					<th>kelas</th>
 					<th>STATUS PEMINJAMAN</th>
 					<th>AKSI</th>
+					<th>Alasan</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -232,7 +232,12 @@
 						<td>
 							<?php if ($dt_pmnjmn->status_peminjaman == 'Dipinjamkan') : ?>
 
-								<a href="#kembali" class="btn btn-success" data-toggle="modal" onclick="tm_detail(<?= $dt_pmnjmn->id_peminjaman ?>)">Kembalikan</a>
+								<a href="#kembali" class="btn btn-success" data-toggle="modal" onclick="tm_kmbli(<?= $dt_pmnjmn->id_peminjaman ?>)">Kembalikan</a>
+							<?php endif ?>
+						</td>
+						<td>
+							<?php if ($dt_pmnjmn->status_peminjaman == 'Ditolak') : ?>
+								<?= $dt_pmnjmn->tolak_alasan ?>
 							<?php endif; ?>
 						</td>
 					</tr>
@@ -310,45 +315,19 @@
 					<span aria-hidden="true">&times;</span>
 					<span class="sr-only">Close</span>
 				</button>
-				<h4 class="modal-title" id="myModalLabel">Update peminjaman</h4>
+				<h4 class="modal-title" id="myModalLabel">Tolak peminjaman</h4>
 			</div>
 			<div class="modal-body">
-				<form action="<?= base_url('index.php/Peminjaman/update_peminjaman') ?>" method="post">
+				<form action="<?= base_url('index.php/Peminjaman_kalab/tolak/') ?>" method="post">
 					<input type="hidden" name="id_peminjaman" id="id_peminjaman">
-					<br> Nama Mesin
-					<select name="id_mesin" class="form-control">
-						<?php
-						foreach ($data_daftar_mesin as $inv) {
-							echo "<option value= '" . $inv->id_mesin . "'>
-                      " . $inv->nama_mesin . "
-                      </option>";
-						}
-						?>
-					</select>
-					<br> Tanggal Pinjam
-					<input type="date" id="tanggal_pinjam" name="tanggal_pinjam" class="form-control">
-					<br> Tanggal Kembali
-					<input type="date" id="tanggal_kembali" name="tanggal_kembali" class="form-control">
-					<br> Status Peminjaman
-					<input type="text" id="status_peminjaman" name="status_peminjaman" class="form-control">
-					<br> Id Pegawai
-					<select name="id_pegawai" class="form-control">
-						<?php
-						foreach ($data_pegawai as $pgw) {
-							echo "<option value= '" . $pgw->id_pegawai . "'>
-                    " . $pgw->nama_pegawai . "
-                    </option>";
-						}
-						?>
-					</select>
+					<br>Alasan Penolakan
+					<input type="text" name="alasan" class="form-control">
 					<br>
-					<br>Jumlah
-					<input type="number" name="jumlah_pinjam" class="form-control">
-					<input type="submit" name="simpan" value="Simpan" class="btn btn-success">
-				</form>
 			</div>
 			<div class="modal-footer">
+				<input type="submit" name="simpan" value="Simpan" class="btn btn-success">
 				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</form>
 			</div>
 		</div>
 	</div>
@@ -389,7 +368,7 @@
 <script>
 	function tm_detail(id_peminjaman) {
 		$.getJSON("<?= base_url() ?>index.php/Peminjaman/get_detail_peminjaman/" + id_peminjaman, function(data) {
-			$("#id_pinjam").val(data['id_peminjaman']);
+			$("#id_peminjaman").val(data['id_peminjaman']);
 			$("#id_mesin").val(data['id_mesin']);
 			$("#tanggal_pinjam").val(data['tanggal_pinjam']);
 			$("#tanggal_kembali").val(data['tanggal_kembali']);
@@ -402,7 +381,7 @@
 <script>
 	function tm_kmbli(id_peminjaman) {
 		$.getJSON("<?= base_url() ?>index.php/Peminjaman/get_detail_peminjaman/" + id_peminjaman, function(data) {
-			$("#id_peminjaman").val(data['id_pinjam']);
+			$("#id_pinjam").val(data['id_peminjaman']);
 			$("#id_mesin").val(data['id_mesin']);
 			$("#tanggal_pinjam").val(data['tanggal_pinjam']);
 			$("#tanggal_kembali").val(data['tanggal_kembali']);

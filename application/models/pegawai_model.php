@@ -12,6 +12,44 @@ class pegawai_model extends CI_Model
       ->result();
     return $data_pegawai;
   }
+  public function get_kalab()
+  {
+    $data_pegawai = $this->db
+      ->join('Petugas', 'Petugas.id_pegawai=Pegawai.id_pegawai')
+      ->join('Level', 'Level.id_level=Petugas.id_level')
+      ->where('level.id_level', 7)
+      ->get('pegawai')
+      ->row_array();
+    return $data_pegawai;
+  }
+  public function get_kajur()
+  {
+    $data_pegawai = $this->db
+      ->join('Petugas', 'Petugas.id_pegawai=Pegawai.id_pegawai')
+      ->join('Level', 'Level.id_level=Petugas.id_level')
+      ->where('level.id_level', 8)
+      ->get('pegawai')
+      ->row_array();
+    return $data_pegawai;
+  }
+  public function get_plp()
+  {
+    $data_pegawai = $this->db
+      ->join('Petugas', 'Petugas.id_pegawai=Pegawai.id_pegawai')
+      ->join('Level', 'Level.id_level=Petugas.id_level')
+      ->where('level.id_level', 8)
+      ->get('pegawai')
+      ->row_array();
+    return $data_pegawai;
+  }
+  public function get_user($id)
+  {
+    $data_pegawai = $this->db->join('Petugas', 'Petugas.id_pegawai=Pegawai.id_pegawai')
+      ->where('pegawai.id_pegawai', $id)
+      ->get('pegawai')
+      ->row_array();
+    return $data_pegawai;
+  }
   public function masuk_db()
   {
     $data_pegawai = array(
