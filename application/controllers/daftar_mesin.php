@@ -7,12 +7,12 @@ class daftar_mesin extends CI_Controller
 	public function index()
 	{
 		$data['konten'] = "v_daftar_mesin";
-		$this->load->model('daftar_mesin_model');
-		$data['data_daftar_mesin'] = $this->daftar_mesin_model->get_daftar_mesin();
-		$this->load->model('jenis_model');
-		$data['data_jenis'] = $this->jenis_model->get_jenis();
-		$this->load->model('petugas_model');
-		$data['data_petugas'] = $this->petugas_model->get_petugas();
+		$this->load->model('Daftar_mesin_model');
+		$data['data_daftar_mesin'] = $this->Daftar_mesin_model->get_daftar_mesin();
+		$this->load->model('Jenis_model');
+		$data['data_jenis'] = $this->Jenis_model->get_jenis();
+		$this->load->model('Petugas_model');
+		$data['data_petugas'] = $this->Petugas_model->get_petugas();
 		$this->load->view('index', $data, FALSE);
 	}
 	public function simpan_daftar_mesin()
@@ -49,7 +49,7 @@ class daftar_mesin extends CI_Controller
 		);
 
 		if ($this->form_validation->run() == TRUE) {
-			$this->load->model('daftar_mesin_model', 'inv');
+			$this->load->model('Daftar_mesin_model', 'inv');
 			$masuk = $this->inv->masuk_db();
 			if ($masuk == true) {
 				$this->session->set_flashdata('pesan', 'sukses masuk');
@@ -79,8 +79,8 @@ class daftar_mesin extends CI_Controller
 	}
 	public function get_detail_daftar_mesin($id_mesin = '')
 	{
-		$this->load->model('daftar_mesin_model');
-		$data_detail = $this->daftar_mesin_model->detail_daftar_mesin($id_mesin);
+		$this->load->model('Daftar_mesin_model');
+		$data_detail = $this->Daftar_mesin_model->detail_daftar_mesin($id_mesin);
 		echo json_encode($data_detail);
 	}
 
@@ -95,8 +95,8 @@ class daftar_mesin extends CI_Controller
 			$this->session->set_flashdata('pesan', validation_errors());
 			redirect(base_url('index.php/daftar_mesin'), 'refresh');
 		} else {
-			$this->load->model('daftar_mesin_model');
-			$proses_update = $this->daftar_mesin_model->update_daftar_mesin();
+			$this->load->model('Daftar_mesin_model');
+			$proses_update = $this->Daftar_mesin_model->update_daftar_mesin();
 			if ($proses_update) {
 				$this->session->set_flashdata('pesan', 'sukses update');
 			} else {
@@ -108,8 +108,8 @@ class daftar_mesin extends CI_Controller
 
 	public function hapus_daftar_mesin($id_mesin)
 	{
-		$this->load->model('daftar_mesin_model');
-		$this->daftar_mesin_model->hapus_daftar_mesin($id_mesin);
+		$this->load->model('Daftar_mesin_model');
+		$this->Daftar_mesin_model->hapus_daftar_mesin($id_mesin);
 		redirect(base_url('index.php/daftar_mesin'), 'refresh');
 	}
 }

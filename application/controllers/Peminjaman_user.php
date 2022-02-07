@@ -16,26 +16,26 @@ class Peminjaman_user extends CI_Controller
 	{
 		$data['konten'] = "v_peminjaman";
 
-		$this->load->model('peminjaman_model');
+		$this->load->model('Peminjaman_model');
 
-		$data['data_peminjaman'] = $this->peminjaman_model->get_peminjamanuser();
+		$data['data_peminjaman'] = $this->Peminjaman_model->get_peminjamanuser();
 		// var_dump($data['data_peminjaman']);
 		// die();
-		$this->load->model('pegawai_model');
+		$this->load->model('Pegawai_model');
 
-		$data['data_pegawai'] = $this->pegawai_model->get_pegawai();
+		$data['data_pegawai'] = $this->Pegawai_model->get_pegawai();
 
-		$this->load->model('daftar_mesin_model');
+		$this->load->model('Daftar_mesin_model');
 
-		$data['data_daftar_mesin'] = $this->daftar_mesin_model->get_daftar_mesin();
+		$data['data_daftar_mesin'] = $this->Daftar_mesin_model->get_daftar_mesin();
 
 		$this->load->view('index', $data);
 	}
 	public function pinjam_mesin()
 	{
 
-		$this->load->model('peminjaman_model', 'pmnjmn');
-		$this->load->model('pegawai_model', 'user');
+		$this->load->model('Peminjaman_model', 'pmnjmn');
+		$this->load->model('Pegawai_model', 'user');
 		$cek_pinjam = $this->pmnjmn->cekPinjam();
 		$id_pegawai = $this->session->userdata('id_pegawai');
 		$user = $this->user->get_user($id_pegawai);
@@ -94,8 +94,8 @@ class Peminjaman_user extends CI_Controller
 	}
 	public function get_detail_peminjaman($id_peminjaman = '')
 	{
-		$this->load->model('peminjaman_model');
-		$data_detail = $this->peminjaman_model->detail_peminjaman($id_peminjaman);
+		$this->load->model('Peminjaman_model');
+		$data_detail = $this->Peminjaman_model->detail_peminjaman($id_peminjaman);
 		echo json_encode($data_detail);
 	}
 
@@ -110,8 +110,8 @@ class Peminjaman_user extends CI_Controller
 			$this->session->set_flashdata('pesan', validation_errors());
 			redirect(base_url('index.php/Peminjaman'), 'refresh');
 		} else {
-			$this->load->model('peminjaman_model');
-			$proses_update = $this->peminjaman_model->update_peminjaman();
+			$this->load->model('Peminjaman_model');
+			$proses_update = $this->Peminjaman_model->update_peminjaman();
 			if ($proses_update) {
 				$this->session->set_flashdata('pesan', 'sukses update');
 			} else {
@@ -123,8 +123,8 @@ class Peminjaman_user extends CI_Controller
 
 	public function hapus_peminjaman($id_peminjaman)
 	{
-		$this->load->model('peminjaman_model');
-		$this->peminjaman_model->hapus_peminjaman($id_peminjaman);
+		$this->load->model('Peminjaman_model');
+		$this->Peminjaman_model->hapus_peminjaman($id_peminjaman);
 		redirect(base_url('index.php/Peminjaman_user'), 'refresh');
 	}
 

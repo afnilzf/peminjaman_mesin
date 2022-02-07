@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class daftar_mesin_model extends CI_Model
+class Daftar_mesin_model extends CI_Model
 {
 
   public function get_daftar_mesin()

@@ -7,8 +7,8 @@ class mahasiswa extends CI_Controller
 	public function index()
 	{
 		$data['konten'] = "v_mahasiswa";
-		$this->load->model('mahasiswa_model');
-		$data['data_mahasiswa'] = $this->mahasiswa_model->get_mahasiswa();
+		$this->load->model('Mahasiswa_model');
+		$data['data_mahasiswa'] = $this->Mahasiswa_model->get_mahasiswa();
 		// var_dump($data['data_pegawai']);
 		//die;
 		$this->load->view('index', $data, FALSE);
@@ -18,7 +18,7 @@ class mahasiswa extends CI_Controller
 		$nidn_npm = $this->input->post('nidn_npm');
 		// var_dump($nidn_npm);
 		// die();
-		$this->load->model('mahasiswa_model', 'mhs');
+		$this->load->model('Mahasiswa_model', 'mhs');
 		$masuk = $this->mhs->masuk_db();
 		// buet nii
 		$cek = $this->mhs->ambil_id($nidn_npm);
@@ -39,8 +39,8 @@ class mahasiswa extends CI_Controller
 	}
 	public function get_detail_pegawai($id_pegawai = '')
 	{
-		$this->load->model('pegawai_model');
-		$data_detail = $this->pegawai_model->detail_pegawai($id_pegawai);
+		$this->load->model('Pegawai_model');
+		$data_detail = $this->Pegawai_model->detail_pegawai($id_pegawai);
 		echo json_encode($data_detail);
 	}
 
@@ -54,8 +54,8 @@ class mahasiswa extends CI_Controller
 			$this->session->set_flashdata('pesan', validation_errors());
 			redirect(base_url('index.php/Mahasiswa'), 'refresh');
 		} else {
-			$this->load->model('pegawai_model');
-			$proses_update = $this->pegawai_model->update_pegawai();
+			$this->load->model('Pegawai_model');
+			$proses_update = $this->Pegawai_model->update_pegawai();
 			if ($proses_update) {
 				$this->session->set_flashdata('pesan', 'sukses update');
 			} else {
@@ -67,8 +67,8 @@ class mahasiswa extends CI_Controller
 
 	public function hapus_pegawai($id_pegawai)
 	{
-		$this->load->model('pegawai_model');
-		$this->pegawai_model->hapus_pegawai($id_pegawai);
+		$this->load->model('Pegawai_model');
+		$this->Pegawai_model->hapus_pegawai($id_pegawai);
 		redirect(base_url('index.php/Mahasiswa'), 'refresh');
 	}
 }

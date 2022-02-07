@@ -8,18 +8,18 @@ class Riwayat_peminjaman_user extends CI_Controller
 	{
 		$data['konten'] = "v_riwayat";
 
-		$this->load->model('peminjaman_model');
+		$this->load->model('Peminjaman_model');
 
-		$data['data_peminjaman'] = $this->peminjaman_model->get_riwayatuser();
+		$data['data_peminjaman'] = $this->Peminjaman_model->get_riwayatuser();
 		// var_dump($data['data_peminjaman']);
 		// die();
-		$this->load->model('pegawai_model');
+		$this->load->model('Pegawai_model');
 
-		$data['data_pegawai'] = $this->pegawai_model->get_pegawai();
+		$data['data_pegawai'] = $this->Pegawai_model->get_pegawai();
 
-		$this->load->model('daftar_mesin_model');
+		$this->load->model('Daftar_mesin_model');
 
-		$data['data_daftar_mesin'] = $this->daftar_mesin_model->get_daftar_mesin();
+		$data['data_daftar_mesin'] = $this->Daftar_mesin_model->get_daftar_mesin();
 
 		$this->load->view('index', $data);
 	}

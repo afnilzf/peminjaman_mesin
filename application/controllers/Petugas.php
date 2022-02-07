@@ -7,10 +7,10 @@ class petugas extends CI_Controller
 	public function index()
 	{
 		$data['konten'] = "v_petugas";
-		$this->load->model('petugas_model');
-		$this->load->model('level_model');
-		$data['data_petugas'] = $this->petugas_model->get_petugas();
-		$data['data_level'] = $this->level_model->get_level_ka();
+		$this->load->model('Petugas_model');
+		$this->load->model('Level_model');
+		$data['data_petugas'] = $this->Petugas_model->get_petugas();
+		$data['data_level'] = $this->Level_model->get_level_ka();
 		// var_dump($data['data_petugas']);
 		// die;
 		$this->load->view('index', $data, FALSE);
@@ -27,7 +27,7 @@ class petugas extends CI_Controller
 
 
 		if ($this->form_validation->run() == TRUE) {
-			$this->load->model('petugas_model', 'pgw');
+			$this->load->model('Petugas_model', 'pgw');
 			$masuk = $this->pgw->masuk_db();
 			// buet nii
 			$cek = $this->pgw->ambil_id($nidn_npm);
@@ -54,8 +54,8 @@ class petugas extends CI_Controller
 	}
 	public function get_detail_petugas($id_petugas = '')
 	{
-		$this->load->model('petugas_model');
-		$data_detail = $this->petugas_model->detail_petugas($id_petugas);
+		$this->load->model('Petugas_model');
+		$data_detail = $this->Petugas_model->detail_petugas($id_petugas);
 		echo json_encode($data_detail);
 	}
 
@@ -69,8 +69,8 @@ class petugas extends CI_Controller
 			$this->session->set_flashdata('pesan', validation_errors());
 			redirect(base_url('index.php/Petugas'), 'refresh');
 		} else {
-			$this->load->model('pegawai_model');
-			$proses_update = $this->pegawai_model->update_pegawai();
+			$this->load->model('Pegawai_model');
+			$proses_update = $this->Pegawai_model->update_pegawai();
 			if ($proses_update) {
 				$this->session->set_flashdata('pesan', 'sukses update');
 			} else {
@@ -82,8 +82,8 @@ class petugas extends CI_Controller
 
 	public function hapus_petugas($id_petugas)
 	{
-		$this->load->model('petugas_model');
-		$this->petugas_model->hapus_petugas($id_petugas);
+		$this->load->model('Petugas_model');
+		$this->Petugas_model->hapus_petugas($id_petugas);
 		redirect(base_url('index.php/petugas'), 'refresh');
 	}
 }
